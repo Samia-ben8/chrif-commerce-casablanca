@@ -2,25 +2,27 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Star } from 'lucide-react';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  stock: number;
-  description?: string;
-}
+import { ShoppingCart } from 'lucide-react';
+import { Product } from '@/types';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart?: (product: Product) => void;
 }
 
-const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
   const isLowStock = product.stock < 6;
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Produit ajouté",
+      description: `${product.name} a été ajouté au panier`,
+    });
+  };
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
@@ -66,7 +68,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       <CardFooter className="p-4 pt-0">
         <Button 
           className="w-full gradient-primary text-primary-foreground hover:opacity-90"
-          onClick={() => onAddToCart?.(product)}
+          onClick={handleAddToCart}
           disabled={product.stock === 0}
         >
           <ShoppingCart className="h-4 w-4 mr-2" />
