@@ -65,7 +65,10 @@ const Header = () => {
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/dashboard">
                     <User className="h-5 w-5 mr-2" />
-                    <span className="hidden sm:inline">{user?.name}</span>
+                    <span className="hidden sm:inline">
+                      {user?.name}
+                      {user?.role === 'admin' && <span className="text-xs bg-red-100 text-red-800 ml-1 px-1 rounded">Admin</span>}
+                    </span>
                   </Link>
                 </Button>
                 <Button variant="ghost" size="sm" onClick={logout}>
@@ -106,6 +109,7 @@ const Header = () => {
                         <Button asChild className="w-full mb-2">
                           <Link to="/dashboard" onClick={() => setIsOpen(false)}>
                             Mon compte
+                            {user?.role === 'admin' && <span className="ml-2 text-xs bg-red-100 text-red-800 px-1 rounded">Admin</span>}
                           </Link>
                         </Button>
                         <Button variant="outline" onClick={logout} className="w-full">

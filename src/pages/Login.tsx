@@ -68,6 +68,21 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           
+          {/* Test Accounts Info */}
+          <div className="px-6 mb-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="text-sm font-semibold text-blue-800 mb-2">Comptes de test :</h4>
+              <div className="space-y-2 text-sm text-blue-700">
+                <div>
+                  <strong>Admin:</strong> admin@droguerie-chrif.ma / admin123
+                </div>
+                <div>
+                  <strong>Client:</strong> client@example.com / user123
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">
               <div className="space-y-2">

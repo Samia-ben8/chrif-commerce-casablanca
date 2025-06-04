@@ -10,6 +10,24 @@ interface AuthContextType extends AuthState {
   updateProfile: (userData: Partial<User>) => void;
 }
 
+// Default test accounts
+const DEFAULT_ACCOUNTS = [
+  {
+    id: 'admin-1',
+    email: 'admin@droguerie-chrif.ma',
+    password: 'admin123',
+    name: 'Administrateur CHRIF',
+    role: 'admin' as const
+  },
+  {
+    id: 'user-1',
+    email: 'client@example.com',
+    password: 'user123',
+    name: 'Client Test',
+    role: 'user' as const
+  }
+];
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -35,11 +53,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Simulate API call - replace with real authentication later
+      // Check against default accounts
+      const account = DEFAULT_ACCOUNTS.find(
+        acc => acc.email === email && acc.password === password
+      );
+
+      if (account) {
+        const user: User = {
+          id: account.id,
+          email: account.email,
+          name: account.name,
+          role: account.role
+        };
+
+        setState({
+          user,
+          isAuthenticated: true,
+          isLoading: false
+        });
+
+        storage.set('user', user);
+        return true;
+      }
+
+      // Fallback: create user account for any other email/password
       const mockUser: User = {
-        id: '1',
+        id: Date.now().toString(),
         email,
         name: email.split('@')[0],
+        role: 'user'
       };
 
       setState({
@@ -58,11 +100,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (userData: { email: string; password: string; name: string }): Promise<boolean> => {
     try {
-      // Simulate API call - replace with real authentication later
+      // Always create as user role for registration
       const newUser: User = {
         id: Date.now().toString(),
         email: userData.email,
         name: userData.name,
+        role: 'user'
       };
 
       setState({
