@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -130,11 +129,6 @@ const Boutique = () => {
     return sorted;
   }, [searchQuery, selectedCategory, sortBy]);
 
-  const handleAddToCart = (product: any) => {
-    console.log('Ajout au panier:', product);
-    // Logique du panier à implémenter plus tard
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -229,7 +223,6 @@ const Boutique = () => {
                     <ProductCard
                       key={product.id}
                       product={product}
-                      onAddToCart={handleAddToCart}
                     />
                   ))}
                 </div>
