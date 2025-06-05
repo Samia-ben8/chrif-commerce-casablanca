@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -119,9 +120,11 @@ const Index = () => {
                         Voir la boutique
                       </Link>
                     </Button>
-                    <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-                      <Phone className="mr-2 h-5 w-5" />
-                      Nous contacter
+                    <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
+                      <Link to="/contact">
+                        <Phone className="mr-2 h-5 w-5" />
+                        Nous contacter
+                      </Link>
                     </Button>
                   </div>
                 </div>

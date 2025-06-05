@@ -22,7 +22,7 @@ const SalesChart = () => {
   const chartConfig = {
     sales: {
       label: "Ventes",
-      color: "hsl(var(--chart-1))",
+      color: "#22C55E",
     },
   };
 
@@ -34,18 +34,21 @@ const SalesChart = () => {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart data={data}>
-            <XAxis dataKey="month" />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Line
-              type="monotone"
-              dataKey="sales"
-              stroke="var(--color-sales)"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-            />
-          </LineChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Line
+                type="monotone"
+                dataKey="sales"
+                stroke="#22C55E"
+                strokeWidth={3}
+                dot={{ r: 5, fill: "#22C55E" }}
+                activeDot={{ r: 7, fill: "#16A34A" }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>

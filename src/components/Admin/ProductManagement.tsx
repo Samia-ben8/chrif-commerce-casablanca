@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Product } from '@/types';
+import { productStore, Product } from '@/stores/productStore';
+import { categoryStore } from '@/stores/categoryStore';
 import { Plus, Edit, Trash2, AlertTriangle } from 'lucide-react';
 
 const ProductManagement = () => {
@@ -18,37 +19,24 @@ const ProductManagement = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState(categoryStore.getCategories());
 
-  // Mock products data
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: '1',
-      name: 'Paracétamol 500mg',
-      price: 25.00,
-      image: '/placeholder.svg',
-      category: 'Médicaments',
-      stock: 100,
-      description: 'Antalgique et antipyrétique'
-    },
-    {
-      id: '2',
-      name: 'Vitamine C 1000mg',
-      price: 45.00,
-      image: '/placeholder.svg',
-      category: 'Vitamines',
-      stock: 5,
-      description: 'Complément alimentaire'
-    },
-    {
-      id: '3',
-      name: 'Thermomètre digital',
-      price: 85.00,
-      image: '/placeholder.svg',
-      category: 'Matériel médical',
-      stock: 25,
-      description: 'Thermomètre électronique précis'
-    }
-  ]);
+  useEffect(() => {
+    const unsubscribeProducts = productStore.subscribe(() => {
+      setProducts(productStore.getProducts());
+    });
+    const unsubscribeCategories = categoryStore.subscribe(() => {
+      setCategories(categoryStore.getCategories());
+    });
+    
+    setProducts(productStore.getProducts());
+    
+    return () => {
+      unsubscribeProducts();
+      unsubscribeCategories();
+    };
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -56,25 +44,22 @@ const ProductManagement = () => {
     category: '',
     stock: '',
     description: '',
-    image: '/placeholder.svg'
+    image: ''
   });
 
-  const categories = ['Médicaments', 'Vitamines', 'Matériel médical', 'Hygiène', 'Cosmétiques'];
-
   const handleAddProduct = () => {
-    const newProduct: Product = {
-      id: Date.now().toString(),
+    const newProduct: Omit<Product, 'id'> = {
       name: formData.name,
       price: parseFloat(formData.price),
-      image: formData.image,
+      image: formData.image || '/placeholder.svg',
       category: formData.category,
       stock: parseInt(formData.stock),
       description: formData.description
     };
 
-    setProducts([...products, newProduct]);
+    productStore.addProduct(newProduct);
     setIsAddDialogOpen(false);
-    setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '/placeholder.svg' });
+    setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '' });
     
     toast({
       title: "Produit ajouté",
@@ -85,19 +70,19 @@ const ProductManagement = () => {
   const handleEditProduct = () => {
     if (!selectedProduct) return;
 
-    const updatedProduct: Product = {
-      ...selectedProduct,
+    const updates: Partial<Product> = {
       name: formData.name,
       price: parseFloat(formData.price),
       category: formData.category,
       stock: parseInt(formData.stock),
-      description: formData.description
+      description: formData.description,
+      image: formData.image || selectedProduct.image
     };
 
-    setProducts(products.map(p => p.id === selectedProduct.id ? updatedProduct : p));
+    productStore.updateProduct(selectedProduct.id, updates);
     setIsEditDialogOpen(false);
     setSelectedProduct(null);
-    setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '/placeholder.svg' });
+    setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '' });
     
     toast({
       title: "Produit modifié",
@@ -106,7 +91,7 @@ const ProductManagement = () => {
   };
 
   const handleDeleteProduct = (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
+    productStore.removeProduct(id);
     toast({
       title: "Produit supprimé",
       description: "Le produit a été supprimé avec succès.",
@@ -157,7 +142,7 @@ const ProductManagement = () => {
                     Remplissez les informations du nouveau produit
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
+                <div className="grid gap-4 py-4 max-h-96 overflow-y-auto">
                   <div className="grid gap-2">
                     <Label htmlFor="name">Nom du produit</Label>
                     <Input
@@ -184,8 +169,8 @@ const ProductManagement = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {categories.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
+                          <SelectItem key={category.id} value={category.name}>
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -198,6 +183,16 @@ const ProductManagement = () => {
                       type="number"
                       value={formData.stock}
                       onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="image">URL de l'image</Label>
+                    <Input
+                      id="image"
+                      type="url"
+                      placeholder="https://example.com/image.jpg"
+                      value={formData.image}
+                      onChange={(e) => setFormData({...formData, image: e.target.value})}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -282,7 +277,7 @@ const ProductManagement = () => {
               Modifiez les informations du produit
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-4 max-h-96 overflow-y-auto">
             <div className="grid gap-2">
               <Label htmlFor="edit-name">Nom du produit</Label>
               <Input
@@ -309,8 +304,8 @@ const ProductManagement = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -323,6 +318,15 @@ const ProductManagement = () => {
                 type="number"
                 value={formData.stock}
                 onChange={(e) => setFormData({...formData, stock: e.target.value})}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-image">URL de l'image</Label>
+              <Input
+                id="edit-image"
+                type="url"
+                value={formData.image}
+                onChange={(e) => setFormData({...formData, image: e.target.value})}
               />
             </div>
             <div className="grid gap-2">

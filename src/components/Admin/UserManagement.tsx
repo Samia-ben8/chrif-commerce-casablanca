@@ -1,13 +1,22 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 import { User, Settings, Trash2 } from 'lucide-react';
 
 const UserManagement = () => {
+  const { toast } = useToast();
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [newStatus, setNewStatus] = useState('');
+
   // Mock data - replace with real data later
-  const users = [
+  const [users, setUsers] = useState([
     {
       id: 'user-1',
       name: 'Ahmed Benali',
@@ -38,7 +47,7 @@ const UserManagement = () => {
       lastLogin: '2024-01-20',
       totalOrders: 0
     }
-  ];
+  ]);
 
   const getRoleColor = (role: string) => {
     return role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800';
@@ -46,6 +55,38 @@ const UserManagement = () => {
 
   const getStatusColor = (status: string) => {
     return status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
+  };
+
+  const handleDeleteUser = (userId: string, userName: string) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${userName} ?`)) {
+      setUsers(users.filter(user => user.id !== userId));
+      toast({
+        title: "Utilisateur supprimé",
+        description: `L'utilisateur ${userName} a été supprimé avec succès.`,
+      });
+    }
+  };
+
+  const handleOpenSettings = (user: any) => {
+    setSelectedUser(user);
+    setNewStatus(user.status);
+    setIsSettingsDialogOpen(true);
+  };
+
+  const handleUpdateUserStatus = () => {
+    if (selectedUser && newStatus) {
+      setUsers(users.map(user => 
+        user.id === selectedUser.id 
+          ? { ...user, status: newStatus }
+          : user
+      ));
+      toast({
+        title: "Statut mis à jour",
+        description: `Le statut de ${selectedUser.name} a été modifié en ${newStatus}.`,
+      });
+      setIsSettingsDialogOpen(false);
+      setSelectedUser(null);
+    }
   };
 
   return (
@@ -100,11 +141,20 @@ const UserManagement = () => {
                     <TableCell>{user.lastLogin}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleOpenSettings(user)}
+                        >
                           <Settings className="h-4 w-4" />
                         </Button>
                         {user.role !== 'admin' && (
-                          <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700"
+                            onClick={() => handleDeleteUser(user.id, user.name)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         )}
@@ -117,6 +167,36 @@ const UserManagement = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Settings Dialog */}
+      <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Modifier le statut de l'utilisateur</DialogTitle>
+            <DialogDescription>
+              Changez le statut de {selectedUser?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <label htmlFor="status">Nouveau statut</label>
+              <Select value={newStatus} onValueChange={setNewStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner un statut" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Actif</SelectItem>
+                  <SelectItem value="inactive">Inactif</SelectItem>
+                  <SelectItem value="suspended">Suspendu</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleUpdateUserStatus}>Mettre à jour</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

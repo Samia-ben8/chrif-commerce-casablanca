@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+
+import { useState, useMemo, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
@@ -6,103 +7,38 @@ import CategoryFilter from '@/components/CategoryFilter';
 import SearchBar from '@/components/SearchBar';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-// Données d'exemple - À remplacer par des données réelles plus tard
-const allProducts = [
-  {
-    id: '1',
-    name: 'Tuyau goutte à goutte 16mm - 100m',
-    price: 245,
-    image: '/placeholder.svg',
-    category: 'Agriculture',
-    stock: 12,
-    description: 'Tuyau d\'irrigation goutte à goutte de qualité professionnelle'
-  },
-  {
-    id: '2',
-    name: 'Insecticide Anti-Pucerons 500ml',
-    price: 85,
-    image: '/placeholder.svg',
-    category: 'Agriculture',
-    stock: 8,
-    description: 'Traitement efficace contre les pucerons et parasites'
-  },
-  {
-    id: '3',
-    name: 'Pompe à eau manuelle 5L',
-    price: 320,
-    image: '/placeholder.svg',
-    category: 'Quincaillerie',
-    stock: 5,
-    description: 'Pompe à eau portable pour usage domestique'
-  },
-  {
-    id: '4',
-    name: 'Peinture décorative blanche 2.5L',
-    price: 180,
-    image: '/placeholder.svg',
-    category: 'Peinture',
-    stock: 15,
-    description: 'Peinture murale de haute qualité, finition mate'
-  },
-  {
-    id: '5',
-    name: 'Corde pour puits 20m',
-    price: 65,
-    image: '/placeholder.svg',
-    category: 'Quincaillerie',
-    stock: 3,
-    description: 'Corde résistante pour puits, diamètre 12mm'
-  },
-  {
-    id: '6',
-    name: 'Désinfectant sol 1L',
-    price: 45,
-    image: '/placeholder.svg',
-    category: 'Droguerie',
-    stock: 20,
-    description: 'Désinfectant efficace pour tous types de sols'
-  },
-  {
-    id: '7',
-    name: 'Pompe électrique 15L',
-    price: 850,
-    image: '/placeholder.svg',
-    category: 'Quincaillerie',
-    stock: 2,
-    description: 'Pompe électrique haute performance 220V'
-  },
-  {
-    id: '8',
-    name: 'Peinture extérieure rouge 5L',
-    price: 325,
-    image: '/placeholder.svg',
-    category: 'Peinture',
-    stock: 8,
-    description: 'Peinture résistante aux intempéries'
-  }
-];
-
-const categories = [
-  { id: 'Agriculture', name: 'Agriculture', count: 2 },
-  { id: 'Quincaillerie', name: 'Quincaillerie', count: 3 },
-  { id: 'Peinture', name: 'Peinture', count: 2 },
-  { id: 'Droguerie', name: 'Droguerie', count: 1 }
-];
+import { productStore } from '@/stores/productStore';
+import { categoryStore } from '@/stores/categoryStore';
 
 const Boutique = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('name');
+  const [products, setProducts] = useState(productStore.getProducts());
+  const [categories, setCategories] = useState(categoryStore.getCategories());
+
+  useEffect(() => {
+    const unsubscribeProducts = productStore.subscribe(() => {
+      setProducts(productStore.getProducts());
+    });
+    const unsubscribeCategories = categoryStore.subscribe(() => {
+      setCategories(categoryStore.getCategories());
+    });
+    
+    return () => {
+      unsubscribeProducts();
+      unsubscribeCategories();
+    };
+  }, []);
 
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = allProducts;
+    let filtered = products;
 
     // Filtrer par recherche
     if (searchQuery) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -127,7 +63,7 @@ const Boutique = () => {
     });
 
     return sorted;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [products, searchQuery, selectedCategory, sortBy]);
 
   return (
     <div className="min-h-screen bg-background">

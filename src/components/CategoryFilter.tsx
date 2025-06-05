@@ -30,9 +30,9 @@ const CategoryFilter = ({ categories, selectedCategory, onCategorySelect }: Cate
         {categories.map((category) => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.id ? "default" : "outline"}
+            variant={selectedCategory === category.name ? "default" : "outline"}
             size="sm"
-            onClick={() => onCategorySelect(category.id)}
+            onClick={() => onCategorySelect(category.name)}
             className="transition-all duration-200 flex items-center space-x-2"
           >
             <span>{category.name}</span>
