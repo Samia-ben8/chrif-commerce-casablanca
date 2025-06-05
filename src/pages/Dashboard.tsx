@@ -8,6 +8,9 @@ import DashboardStats from '@/components/Dashboard/DashboardStats';
 import RecentOrders from '@/components/Dashboard/RecentOrders';
 import UserProfile from '@/components/Dashboard/UserProfile';
 import UserSettings from '@/components/Dashboard/UserSettings';
+import SalesChart from '@/components/Dashboard/SalesChart';
+import TopProductsChart from '@/components/Dashboard/TopProductsChart';
+import StockEvolutionChart from '@/components/Dashboard/StockEvolutionChart';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -42,9 +45,10 @@ const Dashboard = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Aperçu</TabsTrigger>
               <TabsTrigger value="orders">Commandes</TabsTrigger>
+              <TabsTrigger value="statistics">Statistiques</TabsTrigger>
               <TabsTrigger value="profile">Profil</TabsTrigger>
               <TabsTrigger value="settings">Paramètres</TabsTrigger>
             </TabsList>
@@ -56,6 +60,14 @@ const Dashboard = () => {
 
             <TabsContent value="orders" className="space-y-6">
               <RecentOrders orders={orders} />
+            </TabsContent>
+
+            <TabsContent value="statistics" className="space-y-6">
+              <div className="grid gap-6 lg:grid-cols-2">
+                <SalesChart />
+                <TopProductsChart />
+              </div>
+              <StockEvolutionChart />
             </TabsContent>
 
             <TabsContent value="profile" className="space-y-6">
