@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Phone, User, LogOut } from 'lucide-react';
+import { Menu, Phone, User, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import CartButton from '@/components/Cart/CartButton';
 import CartSidebar from '@/components/Cart/CartSidebar';
@@ -62,6 +62,14 @@ const Header = () => {
             {/* Compte utilisateur */}
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
+                {user?.role === 'admin' && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/admin">
+                      <Settings className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">Admin</span>
+                    </Link>
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/dashboard">
                     <User className="h-5 w-5 mr-2" />
@@ -89,9 +97,8 @@ const Header = () => {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm" className="md:hidden">
                   <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                </SheetTrigger>
+              </SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col space-y-4 mt-6">
                   {navigationItems.map((item) => (
                     <Link
@@ -106,6 +113,13 @@ const Header = () => {
                   <div className="pt-4 border-t">
                     {isAuthenticated ? (
                       <div className="space-y-2">
+                        {user?.role === 'admin' && (
+                          <Button asChild className="w-full mb-2" variant="outline">
+                            <Link to="/admin" onClick={() => setIsOpen(false)}>
+                              Admin Dashboard
+                            </Link>
+                          </Button>
+                        )}
                         <Button asChild className="w-full mb-2">
                           <Link to="/dashboard" onClick={() => setIsOpen(false)}>
                             Mon compte
