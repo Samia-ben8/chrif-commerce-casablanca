@@ -11,7 +11,7 @@ import { Product } from '@/stores/productStore';
 interface Category {
   id: string;
   name: string;
-  productCount: number;
+  count: number;
 }
 
 interface ProductFormProps {
