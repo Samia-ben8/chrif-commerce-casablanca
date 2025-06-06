@@ -11,9 +11,43 @@ import SalesChart from '@/components/Dashboard/SalesChart';
 import TopProductsChart from '@/components/Dashboard/TopProductsChart';
 import StockEvolutionChart from '@/components/Dashboard/StockEvolutionChart';
 import StockValuationReport from '@/components/Dashboard/StockValuationReport';
+import { useAuth } from '@/contexts/AuthContext';
+
+// Mock orders data
+const mockOrders = [
+  {
+    id: 'CMD-001',
+    date: '2024-06-05',
+    status: 'confirmée' as const,
+    total: 1250.50,
+    items: 3
+  },
+  {
+    id: 'CMD-002',
+    date: '2024-06-04',
+    status: 'en attente' as const,
+    total: 890.25,
+    items: 2
+  },
+  {
+    id: 'CMD-003',
+    date: '2024-06-03',
+    status: 'expédiée' as const,
+    total: 2340.75,
+    items: 5
+  },
+  {
+    id: 'CMD-004',
+    date: '2024-06-02',
+    status: 'livrée' as const,
+    total: 567.80,
+    items: 1
+  }
+];
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('apercu');
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,8 +65,8 @@ const Dashboard = () => {
             </TabsList>
 
             <TabsContent value="apercu" className="space-y-6">
-              <DashboardStats />
-              <RecentOrders />
+              <DashboardStats orders={mockOrders} />
+              <RecentOrders orders={mockOrders.slice(0, 3)} showViewAllButton={true} />
             </TabsContent>
 
             <TabsContent value="statistiques" className="space-y-6">
@@ -47,13 +81,13 @@ const Dashboard = () => {
             </TabsContent>
 
             <TabsContent value="commandes" className="space-y-6">
-              <RecentOrders showAll={true} />
+              <RecentOrders orders={mockOrders} showViewAllButton={false} />
             </TabsContent>
 
             <TabsContent value="compte" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-1">
-                  <UserProfile />
+                  <UserProfile user={user} />
                 </div>
                 <div className="md:col-span-2">
                   <UserSettings />
