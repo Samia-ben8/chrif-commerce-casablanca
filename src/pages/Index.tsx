@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import MapComponent from '@/components/MapComponent';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import { 
   MapPin, 
   Phone, 
@@ -120,7 +121,7 @@ const Index = () => {
                         Voir la boutique
                       </Link>
                     </Button>
-                    <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
+                    <Button asChild variant="outline" size="lg" className="bg-white text-primary border-white hover:bg-white/90">
                       <Link to="/contact">
                         <Phone className="mr-2 h-5 w-5" />
                         Nous contacter
@@ -247,34 +248,31 @@ const Index = () => {
                   <Phone className="h-6 w-6 text-primary mt-1" />
                   <div>
                     <h3 className="font-semibold mb-1">Contact</h3>
-                    <p className="text-muted-foreground">+212 6XX XXX XXX</p>
+                    <p className="text-muted-foreground">+212 522 240 501</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8">
-                <Button size="lg" className="gradient-primary text-primary-foreground">
+                <Button 
+                  size="lg" 
+                  className="gradient-primary text-primary-foreground"
+                  onClick={() => window.open(`https://wa.me/212688503615`, '_blank')}
+                >
                   <Phone className="mr-2 h-5 w-5" />
                   Contacter par WhatsApp
                 </Button>
               </div>
             </div>
 
-            <div className="h-96 bg-muted rounded-lg overflow-hidden animate-scale-in">
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-16 w-16 text-primary mx-auto mb-4" />
-                  <p className="text-lg font-medium">Carte Google Maps</p>
-                  <p className="text-sm text-muted-foreground">
-                    Localisation du magasin à venir
-                  </p>
-                </div>
-              </div>
+            <div className="h-96 rounded-lg overflow-hidden animate-scale-in">
+              <MapComponent />
             </div>
           </div>
         </div>
       </section>
 
+      <WhatsAppButton phoneNumber="212688503615" />
       <Footer />
     </div>
   );

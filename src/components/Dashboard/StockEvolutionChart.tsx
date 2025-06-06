@@ -1,45 +1,70 @@
 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+
+// Données d'exemple pour l'évolution du stock
+const data = [
+  { name: 'Jan', stock: 400 },
+  { name: 'Fév', stock: 360 },
+  { name: 'Mar', stock: 290 },
+  { name: 'Avr', stock: 340 },
+  { name: 'Mai', stock: 230 },
+  { name: 'Juin', stock: 380 },
+  { name: 'Juil', stock: 420 },
+  { name: 'Août', stock: 380 },
+  { name: 'Sep', stock: 310 },
+  { name: 'Oct', stock: 280 },
+  { name: 'Nov', stock: 250 },
+  { name: 'Déc', stock: 310 },
+];
 
 const StockEvolutionChart = () => {
-  const data = [
-    { category: 'Peinture', stock: 120, restocked: 80 },
-    { category: 'Plomberie', stock: 85, restocked: 60 },
-    { category: 'Électricité', stock: 95, restocked: 45 },
-    { category: 'Quincaillerie', stock: 200, restocked: 150 },
-    { category: 'Jardinage', stock: 65, restocked: 30 },
-    { category: 'Automobile', stock: 40, restocked: 25 }
-  ];
-
-  const chartConfig = {
-    stock: {
-      label: "Stock actuel",
-      color: "hsl(var(--chart-1))",
-    },
-    restocked: {
-      label: "Réapprovisionné",
-      color: "hsl(var(--chart-2))",
-    },
-  };
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>Évolution du stock</CardTitle>
-        <CardDescription>Stock actuel vs réapprovisionné par catégorie</CardDescription>
+        <CardDescription>Valeur totale du stock par mois</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart data={data}>
-            <XAxis dataKey="category" />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar dataKey="stock" fill="var(--color-stock)" />
-            <Bar dataKey="restocked" fill="var(--color-restocked)" />
-          </BarChart>
-        </ChartContainer>
+        <div className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip
+                formatter={(value: number) => [`${value.toLocaleString()} produits`, 'Stock']}
+                labelFormatter={(label) => `Mois: ${label}`}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="stock"
+                name="Stock"
+                stroke="hsl(142, 77%, 30%)"
+                activeDot={{ r: 8 }}
+                strokeWidth={2}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );
