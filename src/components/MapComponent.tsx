@@ -1,6 +1,4 @@
 
-import { MapPin, Phone } from 'lucide-react';
-
 const MapComponent = () => {
   return (
     <div className="relative w-full h-full bg-muted rounded-lg overflow-hidden">
@@ -14,19 +12,6 @@ const MapComponent = () => {
         referrerPolicy="no-referrer-when-downgrade"
         title="Droguerie CHRIF Location"
       />
-      <div className="absolute top-4 left-4 bg-white p-3 rounded-lg shadow-lg max-w-xs">
-        <div className="flex items-center space-x-2 mb-2">
-          <MapPin className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">Droguerie CHRIF</h3>
-        </div>
-        <p className="text-sm text-muted-foreground mb-1">
-          Rue Mohamed El Radi Slaoui, Casablanca
-        </p>
-        <div className="flex items-center space-x-2">
-          <Phone className="h-4 w-4 text-primary" />
-          <p className="text-sm">+212 522 240 501</p>
-        </div>
-      </div>
     </div>
   );
 };
