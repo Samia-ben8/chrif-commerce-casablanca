@@ -1,49 +1,28 @@
 
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/ProductCard';
 import { ArrowRight } from 'lucide-react';
-
-const featuredProducts = [
-  {
-    id: '1',
-    name: 'Tuyau goutte à goutte 16mm - 100m',
-    price: 245,
-    image: '/placeholder.svg',
-    category: 'Agriculture',
-    stock: 12,
-    description: 'Tuyau d\'irrigation goutte à goutte de qualité professionnelle'
-  },
-  {
-    id: '2',
-    name: 'Insecticide Anti-Pucerons 500ml',
-    price: 85,
-    image: '/placeholder.svg',
-    category: 'Agriculture',
-    stock: 8,
-    description: 'Traitement efficace contre les pucerons et parasites'
-  },
-  {
-    id: '3',
-    name: 'Pompe à eau manuelle 5L',
-    price: 320,
-    image: '/placeholder.svg',
-    category: 'Quincaillerie',
-    stock: 5,
-    description: 'Pompe à eau portable pour usage domestique'
-  },
-  {
-    id: '4',
-    name: 'Peinture décorative blanche 2.5L',
-    price: 180,
-    image: '/placeholder.svg',
-    category: 'Peinture',
-    stock: 15,
-    description: 'Peinture murale de haute qualité, finition mate'
-  }
-];
+import { productStore, Product } from '@/stores/productStore';
 
 const FeaturedProductsSection = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = productStore.subscribe(() => {
+      const allProducts = productStore.getProducts();
+      // Prendre les 4 premiers produits comme produits populaires
+      setProducts(allProducts.slice(0, 4));
+    });
+    
+    // Initialiser avec les produits actuels
+    const allProducts = productStore.getProducts();
+    setProducts(allProducts.slice(0, 4));
+    
+    return unsubscribe;
+  }, []);
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
@@ -55,7 +34,7 @@ const FeaturedProductsSection = () => {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {featuredProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

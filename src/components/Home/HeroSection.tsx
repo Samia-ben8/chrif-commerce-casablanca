@@ -12,19 +12,19 @@ const HeroSection = () => {
       title: "Bienvenue chez Droguerie CHRIF",
       subtitle: "Votre partenaire de confiance depuis plus de 20 ans",
       description: "Découvrez notre large gamme de produits pour l'agriculture, la quincaillerie, la droguerie et la peinture",
-      backgroundImage: "https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      backgroundImage: "https://images2.alphacoders.com/139/1392644.png"
     },
     {
       title: "Équipement Agricole Professionnel",
       subtitle: "Systèmes d'irrigation et traitement des cultures",
       description: "Tuyaux goutte à goutte, insecticides et équipements pour optimiser vos récoltes",
-      backgroundImage: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      backgroundImage: "https://wepot.ch/wp-content/uploads/2024/07/Le-systeme-darrosage-pour-jardins-moyens.png"
     },
     {
       title: "Pompes à Eau & Quincaillerie",
       subtitle: "Solutions complètes pour vos besoins domestiques",
       description: "Pompes électriques et manuelles de 2L à 20L, cordes pour puits et plus",
-      backgroundImage: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      backgroundImage: "https://www.aquitaineonline.com/images/stories/Economie_Industrie_2022/legallais_01.jpg"
     }
   ];
 

@@ -18,7 +18,6 @@ const Header = () => {
     { name: 'Accueil', href: '/' },
     { name: 'Boutique', href: '/boutique' },
     { name: 'Catégories', href: '/categories' },
-    { name: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -29,7 +28,7 @@ const Header = () => {
           <Link to="/" className="flex items-center space-x-3">
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/f7eea97e-503f-4124-9274-e69685aeb56b.png" 
+                src="/lovable-uploads/85f519b1-eaa4-4474-bd5f-d5f0bf6b219d.png" 
                 alt="Droguerie CHRIF Logo" 
                 className="w-full h-full object-contain"
               />
@@ -75,7 +74,7 @@ const Header = () => {
                       <DropdownMenuItem asChild>
                         <Link to="/dashboard">
                           <BarChart3 className="h-4 w-4 mr-2" />
-                          Dashboard
+                          Compte
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
@@ -133,7 +132,7 @@ const Header = () => {
                           <>
                             <Button asChild className="w-full mb-2" variant="outline">
                               <Link to="/dashboard" onClick={() => setIsOpen(false)}>
-                                Dashboard
+                                Compte
                               </Link>
                             </Button>
                             <Button asChild className="w-full mb-2" variant="outline">
