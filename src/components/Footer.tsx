@@ -1,11 +1,8 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MapPin, Phone, Clock, Facebook, Instagram } from 'lucide-react';
-
 const Footer = () => {
-  return (
-    <footer className="bg-muted/30 border-t">
+  return <footer className="bg-muted/30 border-t">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Informations du magasin */}
@@ -85,15 +82,13 @@ const Footer = () => {
               <Button variant="ghost" size="sm">
                 <Facebook className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="px-[240px]">
                 <Instagram className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
