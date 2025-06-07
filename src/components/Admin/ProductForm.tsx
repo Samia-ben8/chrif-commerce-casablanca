@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -34,21 +34,46 @@ const ProductForm = ({
   description 
 }: ProductFormProps) => {
   const [formData, setFormData] = useState({
-    name: product?.name || '',
-    price: product?.price.toString() || '',
-    category: product?.category || '',
-    stock: product?.stock.toString() || '',
-    description: product?.description || '',
-    image: product?.image || ''
+    name: '',
+    price: '',
+    category: '',
+    stock: '',
+    description: '',
+    image: ''
   });
+
+  // Mettre à jour le formulaire quand le produit change
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name || '',
+        price: product.price.toString() || '',
+        category: product.category || '',
+        stock: product.stock.toString() || '',
+        description: product.description || '',
+        image: product.image || ''
+      });
+    } else {
+      setFormData({
+        name: '',
+        price: '',
+        category: '',
+        stock: '',
+        description: '',
+        image: ''
+      });
+    }
+  }, [product, isOpen]);
 
   const handleSubmit = () => {
     onSubmit(formData);
-    setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '' });
+    if (!product) {
+      setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '' });
+    }
   };
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) {
+    if (!open && !product) {
       setFormData({ name: '', price: '', category: '', stock: '', description: '', image: '' });
     }
     onOpenChange(open);

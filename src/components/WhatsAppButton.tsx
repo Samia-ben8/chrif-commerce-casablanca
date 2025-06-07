@@ -2,10 +2,10 @@
 import { MessageCircle } from 'lucide-react';
 
 interface WhatsAppButtonProps {
-  phoneNumber: string;
+  phoneNumber?: string;
 }
 
-const WhatsAppButton = ({ phoneNumber }: WhatsAppButtonProps) => {
+const WhatsAppButton = ({ phoneNumber = "212688503615" }: WhatsAppButtonProps) => {
   const handleClick = () => {
     window.open(`https://wa.me/${phoneNumber}`, '_blank');
   };

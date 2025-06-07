@@ -15,7 +15,7 @@ const Index = () => {
       <FeaturesSection />
       <FeaturedProductsSection />
       <LocationSection />
-      <WhatsAppButton phoneNumber="212688503615" />
+      <WhatsAppButton />
       <Footer />
     </div>
   );
