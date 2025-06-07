@@ -45,7 +45,7 @@ const HeroSection = () => {
                     </Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="bg-black text-green-500 border-green-500 hover:bg-black/90">
-                    <Link to="/contact" className="jhg">
+                    <Link to="/contact" className="bg-white text-green-600 my-0 py-0 mx-">
                       <Phone className="mr-2 h-5 w-5" />
                       Nous contacter
                     </Link>
