@@ -79,7 +79,7 @@ const Footer = () => {
               © 2024 Droguerie CHRIF. Tous droits réservés.
             </p>
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="px-0 mx-[90px]">
                 <Facebook className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="sm" className="px-[240px]">
