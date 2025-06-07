@@ -1,11 +1,21 @@
 
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart } from 'lucide-react';
-import { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  stock: number;
+  description?: string;
+}
 
 interface ProductCardProps {
   product: Product;
@@ -14,9 +24,10 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const isLowStock = product.stock < 6;
+  const navigate = useNavigate();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
     addToCart(product);
     toast({
       title: "Produit ajouté",
@@ -24,57 +35,63 @@ const ProductCard = ({ product }: ProductCardProps) => {
     });
   };
 
-  return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-      <div className="relative overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-2 left-2">
-          <Badge variant="secondary" className="text-xs">
-            {product.category}
-          </Badge>
-        </div>
-        {isLowStock && (
-          <div className="absolute top-2 right-2">
-            <Badge variant="destructive" className="text-xs bg-yellow-500 text-yellow-900">
-              Stock bas
-            </Badge>
-          </div>
-        )}
-      </div>
+  const handleProductClick = () => {
+    navigate(`/product/${product.id}`);
+  };
 
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-          {product.name}
-        </h3>
-        {product.description && (
-          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-            {product.description}
-          </p>
-        )}
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-2xl font-bold text-primary">{product.price} DH</span>
+  const getStockBadge = () => {
+    if (product.stock === 0) {
+      return <Badge variant="destructive">Rupture</Badge>;
+    } else if (product.stock <= 10) {
+      return <Badge variant="outline" className="border-yellow-500 text-yellow-700">Stock faible</Badge>;
+    }
+    return <Badge variant="outline" className="border-green-500 text-green-700">En stock</Badge>;
+  };
+
+  return (
+    <Card 
+      className="h-full flex flex-col hover:shadow-lg transition-shadow cursor-pointer"
+      onClick={handleProductClick}
+    >
+      <CardHeader className="p-0">
+        <div className="aspect-square relative overflow-hidden rounded-t-lg">
+          <img 
+            src={product.image} 
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform hover:scale-105"
+          />
+          <div className="absolute top-2 right-2">
+            {getStockBadge()}
           </div>
-          <div className="text-sm text-muted-foreground">
-            Stock: <span className={isLowStock ? 'text-yellow-600 font-medium' : ''}>{product.stock}</span>
+        </div>
+      </CardHeader>
+      <CardContent className="p-4 flex-grow flex flex-col">
+        <div className="flex-grow">
+          <CardTitle className="text-lg mb-2 line-clamp-1">{product.name}</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground mb-2">
+            {product.category}
+          </CardDescription>
+          {product.description && (
+            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+              {product.description}
+            </p>
+          )}
+        </div>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-2xl font-bold text-primary">{product.price.toFixed(2)} DH</span>
+            <span className="text-sm text-muted-foreground">Stock: {product.stock}</span>
           </div>
+          <Button 
+            className="w-full" 
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            {product.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
+          </Button>
         </div>
       </CardContent>
-
-      <CardFooter className="p-4 pt-0">
-        <Button 
-          className="w-full gradient-primary text-primary-foreground hover:opacity-90"
-          onClick={handleAddToCart}
-          disabled={product.stock === 0}
-        >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          {product.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
-        </Button>
-      </CardFooter>
     </Card>
   );
 };

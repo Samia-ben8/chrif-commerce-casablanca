@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Phone, User, LogOut, Settings } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Menu, User, LogOut, Settings, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import CartButton from '@/components/Cart/CartButton';
 import CartSidebar from '@/components/Cart/CartSidebar';
@@ -54,35 +55,45 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
-            {/* Contact WhatsApp */}
-            <Button variant="ghost" size="sm" className="hidden sm:flex">
-              <Phone className="h-4 w-4 mr-2" />
-              Contact
-            </Button>
-
             {/* Panier */}
             <CartButton onClick={() => setIsCartOpen(true)} />
 
             {/* Compte utilisateur */}
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
-                {user?.role === 'admin' && (
+                {user?.role === 'admin' ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <User className="h-5 w-5 mr-2" />
+                        <span className="hidden sm:inline">
+                          Administrateur CHRIF
+                        </span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard">
+                          <BarChart3 className="h-4 w-4 mr-2" />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin">
+                          <Settings className="h-4 w-4 mr-2" />
+                          Admin
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
                   <Button variant="ghost" size="sm" asChild>
-                    <Link to="/admin">
-                      <Settings className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">Admin</span>
+                    <Link to="/dashboard">
+                      <User className="h-5 w-5 mr-2" />
+                      <span className="hidden sm:inline">{user?.name}</span>
                     </Link>
                   </Button>
                 )}
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/dashboard">
-                    <User className="h-5 w-5 mr-2" />
-                    <span className="hidden sm:inline">
-                      {user?.name}
-                      {user?.role === 'admin' && <span className="text-xs bg-red-100 text-red-800 ml-1 px-1 rounded">Admin</span>}
-                    </span>
-                  </Link>
-                </Button>
                 <Button variant="ghost" size="sm" onClick={logout}>
                   <LogOut className="h-5 w-5" />
                 </Button>
@@ -119,18 +130,26 @@ const Header = () => {
                     {isAuthenticated ? (
                       <div className="space-y-2">
                         {user?.role === 'admin' && (
-                          <Button asChild className="w-full mb-2" variant="outline">
-                            <Link to="/admin" onClick={() => setIsOpen(false)}>
-                              Admin Dashboard
+                          <>
+                            <Button asChild className="w-full mb-2" variant="outline">
+                              <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                                Dashboard
+                              </Link>
+                            </Button>
+                            <Button asChild className="w-full mb-2" variant="outline">
+                              <Link to="/admin" onClick={() => setIsOpen(false)}>
+                                Admin
+                              </Link>
+                            </Button>
+                          </>
+                        )}
+                        {user?.role !== 'admin' && (
+                          <Button asChild className="w-full mb-2">
+                            <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                              Mon compte
                             </Link>
                           </Button>
                         )}
-                        <Button asChild className="w-full mb-2">
-                          <Link to="/dashboard" onClick={() => setIsOpen(false)}>
-                            Mon compte
-                            {user?.role === 'admin' && <span className="ml-2 text-xs bg-red-100 text-red-800 px-1 rounded">Admin</span>}
-                          </Link>
-                        </Button>
                         <Button variant="outline" onClick={logout} className="w-full">
                           Se déconnecter
                         </Button>
@@ -142,10 +161,6 @@ const Header = () => {
                         </Link>
                       </Button>
                     )}
-                    <Button className="w-full">
-                      <Phone className="h-4 w-4 mr-2" />
-                      Contacter par WhatsApp
-                    </Button>
                   </div>
                 </div>
               </SheetContent>

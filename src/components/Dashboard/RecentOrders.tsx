@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface Order {
   id: string;
@@ -16,6 +17,8 @@ interface RecentOrdersProps {
 }
 
 const RecentOrders = ({ orders, showViewAllButton = false }: RecentOrdersProps) => {
+  const navigate = useNavigate();
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmée': return 'text-green-600 bg-green-100';
@@ -24,6 +27,11 @@ const RecentOrders = ({ orders, showViewAllButton = false }: RecentOrdersProps) 
       case 'livrée': return 'text-gray-600 bg-gray-100';
       default: return 'text-gray-600 bg-gray-100';
     }
+  };
+
+  const handleViewAllOrders = () => {
+    // Navigate to orders tab in dashboard
+    navigate('/dashboard?tab=commandes');
   };
 
   return (
@@ -57,7 +65,7 @@ const RecentOrders = ({ orders, showViewAllButton = false }: RecentOrdersProps) 
         
         {showViewAllButton && (
           <div className="mt-4">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={handleViewAllOrders}>
               Voir toutes les commandes
             </Button>
           </div>

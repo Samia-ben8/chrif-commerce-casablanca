@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -46,8 +47,23 @@ const mockOrders = [
 ];
 
 const Dashboard = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('apercu');
   const { user } = useAuth();
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setSearchParams({ tab: value });
+  };
+
+  const isAdmin = user?.role === 'admin';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -56,10 +72,10 @@ const Dashboard = () => {
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold mb-6">Tableau de bord</h1>
 
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="mb-6">
-            <TabsList className="grid w-full grid-cols-4 md:grid-cols-4 h-auto">
+          <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="mb-6">
+            <TabsList className={`grid w-full ${isAdmin ? 'grid-cols-4' : 'grid-cols-3'} h-auto`}>
               <TabsTrigger value="apercu" className="py-2">Aperçu</TabsTrigger>
-              <TabsTrigger value="statistiques" className="py-2">Statistiques</TabsTrigger>
+              {isAdmin && <TabsTrigger value="statistiques" className="py-2">Statistiques</TabsTrigger>}
               <TabsTrigger value="commandes" className="py-2">Commandes</TabsTrigger>
               <TabsTrigger value="compte" className="py-2">Mon Compte</TabsTrigger>
             </TabsList>
@@ -69,16 +85,18 @@ const Dashboard = () => {
               <RecentOrders orders={mockOrders.slice(0, 3)} showViewAllButton={true} />
             </TabsContent>
 
-            <TabsContent value="statistiques" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <SalesChart />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <TopProductsChart />
-                <StockEvolutionChart />
-              </div>
-              <StockValuationReport />
-            </TabsContent>
+            {isAdmin && (
+              <TabsContent value="statistiques" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <SalesChart />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <TopProductsChart />
+                  <StockEvolutionChart />
+                </div>
+                <StockValuationReport />
+              </TabsContent>
+            )}
 
             <TabsContent value="commandes" className="space-y-6">
               <RecentOrders orders={mockOrders} showViewAllButton={false} />

@@ -65,7 +65,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <p className="text-sm text-muted-foreground">+212 6XX XXX XXX</p>
+                <p className="text-sm text-muted-foreground">+212 522 240 501</p>
               </div>
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4 text-primary" />
@@ -87,10 +87,6 @@ const Footer = () => {
               </Button>
               <Button variant="ghost" size="sm">
                 <Instagram className="h-4 w-4" />
-              </Button>
-              <Button className="gradient-primary text-primary-foreground">
-                <Phone className="h-4 w-4 mr-2" />
-                WhatsApp
               </Button>
             </div>
           </div>

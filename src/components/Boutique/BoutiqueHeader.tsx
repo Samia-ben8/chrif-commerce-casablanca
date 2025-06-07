@@ -1,15 +1,18 @@
 
+import { Card, CardContent } from '@/components/ui/card';
+
 const BoutiqueHeader = () => {
   return (
-    <section className="py-16 bg-gradient-to-br from-primary/10 to-accent/10">
-      <div className="container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Notre Boutique</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Découvrez notre gamme complète de produits pour l'agriculture, la quincaillerie, 
-          la droguerie et la peinture
-        </p>
+    <div className="bg-gradient-to-r from-primary/10 to-accent/10 border-b">
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-foreground">Boutique</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Parcourez notre catalogue complet de produits de qualité
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

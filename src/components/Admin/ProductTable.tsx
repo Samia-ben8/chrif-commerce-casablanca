@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Product } from '@/stores/productStore';
-import { Edit, Trash2, AlertTriangle } from 'lucide-react';
+import { Edit, Trash2, AlertTriangle, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface ProductTableProps {
   products: Product[];
@@ -12,10 +13,16 @@ interface ProductTableProps {
 }
 
 const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) => {
+  const navigate = useNavigate();
+
   const getStockStatus = (stock: number) => {
     if (stock === 0) return { label: 'Rupture', color: 'bg-red-100 text-red-800' };
     if (stock <= 10) return { label: 'Stock faible', color: 'bg-yellow-100 text-yellow-800' };
     return { label: 'En stock', color: 'bg-green-100 text-green-800' };
+  };
+
+  const handleViewProduct = (productId: string) => {
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -59,6 +66,9 @@ const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) => {
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
+                  <Button variant="ghost" size="sm" onClick={() => handleViewProduct(product.id)}>
+                    <Eye className="h-4 w-4" />
+                  </Button>
                   <Button variant="ghost" size="sm" onClick={() => onEdit(product)}>
                     <Edit className="h-4 w-4" />
                   </Button>
