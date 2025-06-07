@@ -12,19 +12,19 @@ const HeroSection = () => {
       title: "Bienvenue chez Droguerie CHRIF",
       subtitle: "Votre partenaire de confiance depuis plus de 20 ans",
       description: "Découvrez notre large gamme de produits pour l'agriculture, la quincaillerie, la droguerie et la peinture",
-      image: "/placeholder.svg"
+      backgroundImage: "https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
     },
     {
       title: "Équipement Agricole Professionnel",
       subtitle: "Systèmes d'irrigation et traitement des cultures",
       description: "Tuyaux goutte à goutte, insecticides et équipements pour optimiser vos récoltes",
-      image: "/placeholder.svg"
+      backgroundImage: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
     },
     {
       title: "Pompes à Eau & Quincaillerie",
       subtitle: "Solutions complètes pour vos besoins domestiques",
       description: "Pompes électriques et manuelles de 2L à 20L, cordes pour puits et plus",
-      image: "/placeholder.svg"
+      backgroundImage: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
     }
   ];
 
@@ -44,8 +44,11 @@ const HeroSection = () => {
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <div className="relative h-full bg-gradient-to-br from-primary/90 to-accent/90">
-            <div className="absolute inset-0 bg-black/20" />
+          <div 
+            className="relative h-full bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${slide.backgroundImage})` }}
+          >
+            <div className="absolute inset-0 bg-black/50" />
             <div className="relative container mx-auto px-4 h-full flex items-center">
               <div className="max-w-2xl text-white animate-fade-in-up">
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">{slide.title}</h1>

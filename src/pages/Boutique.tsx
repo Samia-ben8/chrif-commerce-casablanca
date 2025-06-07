@@ -2,7 +2,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import BoutiqueHeader from '@/components/Boutique/BoutiqueHeader';
 import BoutiqueSidebar from '@/components/Boutique/BoutiqueSidebar';
 import ProductGrid from '@/components/Boutique/ProductGrid';
 import { productStore } from '@/stores/productStore';
@@ -66,8 +65,6 @@ const Boutique = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
-      <BoutiqueHeader />
 
       <div className="container mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-4 gap-8">
