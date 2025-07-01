@@ -88,12 +88,14 @@ const ProductDetail = () => {
         {/* Product Details */}
         <div className="grid lg:grid-cols-2 gap-12 mb-12">
           {/* Image */}
-          <div className="aspect-square">
-            <img 
-              src={product.image} 
-              alt={product.name}
-              className="w-full h-full object-cover rounded-lg shadow-lg"
-            />
+          <div className="flex justify-center">
+            <div className="w-96 h-96 max-w-full">
+              <img 
+                src={product.image} 
+                alt={product.name}
+                className="w-full h-full object-cover rounded-lg shadow-lg"
+              />
+            </div>
           </div>
 
           {/* Info */}
